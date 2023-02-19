@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.RobotContainer;
 import frc.robot.Util;
-import frc.robot.configs.DriveTrainConfig;
+import frc.robot.commands.paths.DriveTrainConfig;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;

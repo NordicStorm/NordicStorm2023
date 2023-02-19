@@ -41,14 +41,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
-import frc.robot.configs.DriveTrainConfig;
+import frc.robot.commands.paths.DriveTrainConfig;
+import frc.robot.commands.paths.PathableDrivetrain;
 
 
 
 /**
  *
  */
-public class DriveTrainSubsystem extends SubsystemBase {
+public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivetrain {
 
 
     private static final double MAX_VOLTAGE = 12.0;
@@ -70,9 +71,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
             new Translation2d(-Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                     -Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-
+    private final SwerveDriveOdometry odometry;
     private ChassisSpeeds targetChassisSpeeds;
     private SwerveModuleState currentSwerveStates [] = new SwerveModuleState[4];
+    private SwerveModulePosition currentSwervePositions [] = new SwerveModulePosition[4];
+
     private Pose2d pose;
     private final AHRS navx = new AHRS(Port.kMXP);
 
@@ -91,7 +94,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
        
   
         fieldDisplay = new Field2d();
-        //SmartDashboard.putData(fieldDisplay);
+        SmartDashboard.putData(fieldDisplay);
 
         frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
@@ -137,7 +140,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
         drivetrainConfig.maxCentripetalAcceleration = 8;
 
         pose = new Pose2d(6, 4, Rotation2d.fromDegrees(0));
-        //odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(0), pose);
+        updateModulePositions();
+        odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(0), currentSwervePositions, pose);
         //SmartDashboard.putNumber("MaxAccel", 4);
         targetChassisSpeeds = new ChassisSpeeds(0, 0, 0);
         drive(0, 0, 0);
@@ -166,7 +170,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
      * @return
      */
     public double getGyroPitch(){
-        return navx.getRoll(); // because of orientation this is pitch
+        return navx.getRoll(); // because of orientation of navx this is pitch
     }
     
     public Pose2d getPose() {
@@ -179,8 +183,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
      * @param rot in radians, but this is ignored.
      */
     public void setPose(double x, double y, double rot) {
-        // navx.reset();
-        
+       odometry.resetPosition(Rotation2d.fromDegrees(getGyroDegrees()), currentSwervePositions, new Pose2d(x, y, Rotation2d.fromDegrees(getGyroDegrees())));        
     }
 
     public void resetAngle() {
@@ -213,16 +216,21 @@ public class DriveTrainSubsystem extends SubsystemBase {
         drive(chassisSpeeds, 0);
     }
 
+    private void updateModulePositions(){
+        for(int i = 0; i<swerveModules.size(); i++){
+            currentSwervePositions[i]=Util.positionFromModule(swerveModules.get(i));
+        }
+    }
     @Override
     public void periodic() {
 
         for(int i = 0; i<swerveModules.size(); i++){
             currentSwerveStates[i]=Util.stateFromModule(swerveModules.get(i));
         }
-        // Update the pose
-    
+        updateModulePositions();
 
-        //pose = odometry.update(Rotation2d.fromDegrees(getGyroDegrees()), currentSwerveStates);
+        // Update the pose
+        pose = odometry.update(Rotation2d.fromDegrees(getGyroDegrees()), currentSwervePositions);
         
         driveActualMotors(targetChassisSpeeds);
         currentRotationPrivilegeNeeded = 0;
@@ -232,6 +240,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
         if (RobotContainer.rightJoystick.getRawButton(12)) {
             resetAngle();
+        }
+        if (RobotContainer.rightJoystick.getRawButton(8)) {
+            setPose(0, 0, 0);
+        }
+        if (RobotContainer.rightJoystick.getRawButton(7)) {
+            setPose(-1, 1, 0);
         }
         
     }
@@ -260,7 +274,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     public void limitDrive(ChassisSpeeds localSpeeds, int rotPrivilege) {
-        boolean vWalls = false;// Robot.vision.hasSeenTarget;
+        boolean vWalls = true;// Robot.vision.hasSeenTarget;
         var currentLocalSpeeds = getSpeeds();
 
         double maxAccelLocal = 3;
@@ -272,12 +286,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
         var targetFieldSpeeds = Util.rotateSpeeds(localSpeeds, -getGyroRadians());
 
         double fixX = enforceWalls(targetFieldSpeeds.vxMetersPerSecond, drivetrainConfig.maxAcceleration,
-                pose.getX(), 1, 4.2);
+                pose.getX(), -5, 0);
         if (vWalls){
             targetFieldSpeeds.vxMetersPerSecond = fixX;
         }
         double fixY = enforceWalls(targetFieldSpeeds.vyMetersPerSecond, drivetrainConfig.maxAcceleration,
-                pose.getY(), -6.5, -1);
+                pose.getY(), 0, 6);
         if (vWalls){
             targetFieldSpeeds.vyMetersPerSecond = fixY;
         }

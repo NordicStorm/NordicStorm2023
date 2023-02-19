@@ -1,4 +1,4 @@
-package frc.robot.configs;
+package frc.robot.commands.paths;
 
 /**
  * Velocity units are meters per second. Acceleration is meters per second per

@@ -3,12 +3,17 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
 public class Util {
     public static SwerveModuleState stateFromModule(SwerveModule module){
         return new SwerveModuleState(module.getDriveVelocity(), new Rotation2d(module.getSteerAngle()));
+    }
+
+    public static SwerveModulePosition positionFromModule(SwerveModule module){
+        return new SwerveModulePosition(module.getDrivePosition(), new Rotation2d(module.getSteerAngle()));
     }
     /**
      * angle unit is radians!
