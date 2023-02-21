@@ -9,6 +9,7 @@ import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExamplePathAuto;
+import frc.robot.commands.FollowBall;
 import frc.robot.commands.OperatorControl;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -20,8 +21,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -64,6 +67,10 @@ public class RobotContainer {
     
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+
+    new JoystickButton(leftJoystick, 2).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 1, 3, false, 300)));
+    new JoystickButton(leftJoystick, 5).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 2, 3, false, 300)));
+
   }
 
   /**
