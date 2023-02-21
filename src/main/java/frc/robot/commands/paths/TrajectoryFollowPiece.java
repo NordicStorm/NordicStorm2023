@@ -75,7 +75,7 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
             }else{
                 firstPoint = endPosition;
             }
-            startMovementDirection = new Rotation2d(Math.atan2(firstPoint.getY() - currentPose.getY(), firstPoint.getX() - currentPose.getX()));
+            startMovementDirection = new Rotation2d(firstPoint.getX() - currentPose.getX(), firstPoint.getY() - currentPose.getY());
 
         } else {
             // the time to stop times 1/2 to allow curve

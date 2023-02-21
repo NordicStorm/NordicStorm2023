@@ -5,11 +5,14 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ExamplePathAuto;
 import frc.robot.commands.OperatorControl;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Pixy;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -35,13 +38,15 @@ public class RobotContainer {
   public static final Joystick rightJoystick = new Joystick(0);
 
   public static DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
-
+  public static Pixy pixyController = new Pixy();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
 
     //CommandScheduler.getInstance().setDefaultCommand(driveTrain, new OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
+   
+   
     configureBindings();
   }
 
@@ -67,7 +72,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+    AutoWithInit auto = new ExamplePathAuto(driveTrain);
+    auto.initializeCommands();
+    return auto;
   }
 }

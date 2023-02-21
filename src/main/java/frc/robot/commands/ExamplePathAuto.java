@@ -17,6 +17,7 @@ public class ExamplePathAuto extends AutoWithInit{
     }
     @Override
     public void initializeCommands() {
+// !PATHWEAVER_INFO: {"trackWidth":0.9271,"gameName":"Charged Up","outputDir":"C:\\Users\\Nordic Storm 3018\\FRC\\NordicStorm2023\\NordicStorm2023\\src\\main\\java\\frc\\robot\\commands\\ExamplePathAuto.java"}
 
         //driveTrain.resetSwerve();
 
@@ -28,22 +29,23 @@ public class ExamplePathAuto extends AutoWithInit{
         config.maxAngularAcceleration = 8;
         config.maxAnglularVelocity = 12;
         double halfWidth = 0.46355;
-        driveTrain.setPose(7.1882+halfWidth, 1.343025+halfWidth, 0);
-        driveTrain.setAngleOffset(-90);
+        driveTrain.setAngleOffset(180);
 
         MultiPartPath pathA;
-
+        driveTrain.setPose(14.678+halfWidth, 4.393+halfWidth, 0);
         pathA = new MultiPartPath(driveTrain, config, null);
-        pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:7.741,2.029
-        pathA.setHeading(-90);
-        pathA.addWaypoint(7.669, 1.514);
-
-        pathA.setHeading(-120);
-
-        pathA.addWaypoint(7.130, 1.538);
+        pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:14.772,4.393
+        pathA.setHeading(180);
+        pathA.addWaypoint(14.363, 5.873);
+        pathA.addWaypoint(11.246, 6.833);
+        pathA.addWaypoint(10.978, 5.401);
+        pathA.changeMaxVelocity(1);
         pathA.addStop();
-        //pathA.addSequentialCommand(new TurnAndShoot(driveTrain, barrel, vision, 2000, true, true));//ENDPOS:7.034,1.562
-             
+        pathA.addWaypoint(10.553, 3.779);
+        pathA.addWaypoint(15.386, 4.141);
+        pathA.addStop();
+        addCommands(pathA.finalizePath());
+
 
     }
 

@@ -29,7 +29,7 @@ public class ConfigPropertySetPiece extends CommandBase implements CommandPathPi
         }
 
         try {
-            field.setDouble(path.drivetrain, value);
+            field.setDouble(path.drivetrainConfig, value);
         } catch (IllegalArgumentException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }

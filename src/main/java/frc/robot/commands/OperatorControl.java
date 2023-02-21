@@ -54,6 +54,13 @@ public class OperatorControl extends CommandBase {
         
         ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), RobotContainer.driveTrain.getGyroRadians());
         
+
+        if(leftStick.getRawButton(2)){
+            RobotContainer.pixyController.setLamps(true);
+        }else{
+            RobotContainer.pixyController.setLamps(false);
+        }
+
         
         RobotContainer.driveTrain.limitDrive(localSpeeds, 0);
         
