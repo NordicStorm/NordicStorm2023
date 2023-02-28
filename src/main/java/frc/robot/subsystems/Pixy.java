@@ -98,17 +98,7 @@ public class Pixy{
             return new PixyResult(ResultType.ERROR, null);
         }
 
-        boolean allZeros = true;
-
-        for(int j = 0; j < rawData.length; j++){
-            if(rawData[j] != 0){
-                allZeros = false;
-                break;
-            }
-        }
-        if(!allZeros)
-            System.out.println(Arrays.toString(rawData));
-
+  
         for (int i = 0; i <= 20; i++) {
 
             int syncWord = cvt(rawData[i + 0], rawData[i + 1]); // Parse first 2 bytes
@@ -156,7 +146,7 @@ public class Pixy{
                 }
 
                 //System.out.println(packets.toString());
-                System.out.print("Thing found");
+                //System.out.print("Thing found");
                 break;
             }
         }

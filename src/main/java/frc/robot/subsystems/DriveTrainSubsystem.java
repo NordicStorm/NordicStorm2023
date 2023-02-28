@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.AnalogInput;
 import com.swervedrivespecialties.swervelib.Mk3ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
@@ -30,6 +31,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -236,8 +239,8 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         currentRotationPrivilegeNeeded = 0;
         fieldDisplay.setRobotPose(pose.getX(), pose.getY(), new Rotation2d(getGyroRadians()));
         //SmartDashboard.putNumber("Pitch", navx.getRoll());
-
-        SmartDashboard.putNumber("driveAng", getGyroDegrees());
+      
+       SmartDashboard.putNumber("driveAng", getGyroDegrees());
         if (RobotContainer.rightJoystick.getRawButton(12)) {
             resetAngle();
         }

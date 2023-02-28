@@ -5,20 +5,26 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExamplePathAuto;
 import frc.robot.commands.FollowBall;
 import frc.robot.commands.OperatorControl;
+import frc.robot.commands.VacuumCommands.VacuumDefaultCommand;
+import frc.robot.commands.VacuumCommands.VacuumManualControlCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Pixy;
+import frc.robot.subsystems.VacuumSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -42,14 +48,20 @@ public class RobotContainer {
 
   public static DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   public static Pixy pixyController = new Pixy();
+
+  public static VacuumSubsystem vacuumSubsystem = new VacuumSubsystem();
+
+  public static ArmSubsystem armSubsystem = new ArmSubsystem();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-
+    VacuumSubsystem.initalizePcm();
+    SmartDashboard.putNumber("Vacuum Speed", 0.30);
     //CommandScheduler.getInstance().setDefaultCommand(driveTrain, new OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
-   
-   
+    vacuumSubsystem.setDefaultCommand(new VacuumDefaultCommand(vacuumSubsystem));
+    
     configureBindings();
   }
 
@@ -70,7 +82,8 @@ public class RobotContainer {
 
     new JoystickButton(leftJoystick, 2).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 1, 3, false, 300)));
     new JoystickButton(leftJoystick, 5).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 2, 3, false, 300)));
-
+    new JoystickButton(leftJoystick, 4).whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
+    new JoystickButton(leftJoystick, 3).whileTrue(new ArmCommand(armSubsystem));
   }
 
   /**

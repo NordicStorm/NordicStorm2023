@@ -34,7 +34,7 @@ public class ExamplePathAuto extends AutoWithInit{
         MultiPartPath pathA;
         driveTrain.setPose(14.678+halfWidth, 4.393+halfWidth, 0);
         pathA = new MultiPartPath(driveTrain, config, null);
-        pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:14.772,4.393
+        pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:15.276,6.282
         pathA.setHeading(180);
         pathA.addWaypoint(14.363, 5.873);
         pathA.addWaypoint(11.246, 6.833);
