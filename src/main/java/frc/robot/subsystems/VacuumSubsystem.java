@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -42,12 +43,12 @@ public class VacuumSubsystem extends SubsystemBase {
         }
     }
 
-    public void openServo() {
-        vacuumRepressurizationSolenoid.set(false);
+    public void openSolenoid() {
+        vacuumRepressurizationSolenoid.set(true);
     }
 
-    public void closeServo() {
-        vacuumRepressurizationSolenoid.set(true);
+    public void closeSolenoid() {
+        vacuumRepressurizationSolenoid.set(false);
     }
 
     public double getVacuumPercentage() {

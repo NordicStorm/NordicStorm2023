@@ -19,8 +19,10 @@ public class VacuumManualControlCommand extends CommandBase {
 
         SmartDashboard.putNumber("Vacuum Percentage", vacuumSubsystem.getVacuumPercentage());
         SmartDashboard.putNumber("Vacuum Voltage", vacuumSubsystem.getVacuumVoltage());
-        
-        if (vacuumSubsystem.getVacuumPercentage() >= 0.5) {
+
+        vacuumSubsystem.closeSolenoid();
+
+        if (vacuumSubsystem.getVacuumPercentage() >= 1.0f) {
             vacuumSubsystem.stopVacuum();
             return;
         }
@@ -31,7 +33,7 @@ public class VacuumManualControlCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         vacuumSubsystem.stopVacuum();
-        vacuumSubsystem.openServo();
+        vacuumSubsystem.openSolenoid();
     }
 
 }

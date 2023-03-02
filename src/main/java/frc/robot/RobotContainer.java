@@ -12,6 +12,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExamplePathAuto;
 import frc.robot.commands.FollowBall;
 import frc.robot.commands.OperatorControl;
+import frc.robot.commands.ServoTestCommand;
 import frc.robot.commands.VacuumCommands.VacuumDefaultCommand;
 import frc.robot.commands.VacuumCommands.VacuumManualControlCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -21,6 +22,7 @@ import frc.robot.subsystems.Pixy;
 import frc.robot.subsystems.VacuumSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.playingwithfusion.TimeOfFlight;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -45,6 +47,10 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final Joystick leftJoystick = new Joystick(1);
   public static final Joystick rightJoystick = new Joystick(0);
+
+  public static TimeOfFlight timeOfFlight = new TimeOfFlight(24);
+  public static TimeOfFlight timeOfFlight2 = new TimeOfFlight(23);
+
 
   public static DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   public static Pixy pixyController = new Pixy();
@@ -80,10 +86,11 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
 
-    new JoystickButton(leftJoystick, 2).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 1, 3, false, 300)));
+    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1)).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 1, 3, false, 300)));
     new JoystickButton(leftJoystick, 5).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 2, 3, false, 300)));
     new JoystickButton(leftJoystick, 4).whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
     new JoystickButton(leftJoystick, 3).whileTrue(new ArmCommand(armSubsystem));
+    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1).negate()).whileTrue(new ServoTestCommand());
   }
 
   /**
