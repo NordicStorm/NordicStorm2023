@@ -63,6 +63,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     VacuumSubsystem.initalizePcm();
+    ArmSubsystem.InitalizeArmSubsystem();
     SmartDashboard.putNumber("Vacuum Speed", 0.30);
     //CommandScheduler.getInstance().setDefaultCommand(driveTrain, new OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
@@ -87,10 +88,10 @@ public class RobotContainer {
     // cancelling on release.
 
     new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1)).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 1, 3, false, 300)));
-    new JoystickButton(leftJoystick, 5).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 2, 3, false, 300)));
-    new JoystickButton(leftJoystick, 4).whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
+    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1).negate()).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 2, 3, false, 300)));
+    new JoystickButton(leftJoystick, 3).and(new JoystickButton(leftJoystick, 1)).whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
     new JoystickButton(leftJoystick, 3).whileTrue(new ArmCommand(armSubsystem));
-    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1).negate()).whileTrue(new ServoTestCommand());
+    new JoystickButton(leftJoystick, 5).whileTrue(new ServoTestCommand());
   }
 
   /**
