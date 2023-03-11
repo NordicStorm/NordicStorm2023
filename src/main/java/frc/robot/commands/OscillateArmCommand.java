@@ -1,27 +1,26 @@
 package frc.robot.commands;
 
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class ArmCommand extends CommandBase{
-    
+public class OscillateArmCommand extends CommandBase{
     private ArmSubsystem armSubsystem;
-    private double pos;
 
-    public ArmCommand(ArmSubsystem subsystem, double pos){
+    public OscillateArmCommand(ArmSubsystem subsystem){
         this.armSubsystem = subsystem;
-        this.pos = pos;
 
         this.addRequirements(subsystem);
     }
 
     @Override
     public void execute(){
-        armSubsystem.MoveExtension(pos);
+        double currentPos = ArmSubsystem.ArmExtensionMotor.getEncoder().getPosition();
+    
+        if (Math.abs(currentPos - ArmSubsystem.inPos) < 0.5) {
+            armSubsystem.MoveExtension(ArmSubsystem.outPos);
+        } else if (Math.abs(currentPos - ArmSubsystem.outPos) < 0.5) {
+            armSubsystem.MoveExtension(ArmSubsystem.inPos);
+        }
         // armSubsystem.MoveExtension(RobotContainer.leftJoystick.getY());
         // armSubsystem.MovePitch(RobotContainer.leftJoystick.getX());      
     }

@@ -12,6 +12,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExamplePathAuto;
 import frc.robot.commands.FollowBall;
 import frc.robot.commands.OperatorControl;
+import frc.robot.commands.OscillateArmCommand;
 import frc.robot.commands.ServoTestCommand;
 import frc.robot.commands.VacuumCommands.VacuumDefaultCommand;
 import frc.robot.commands.VacuumCommands.VacuumManualControlCommand;
@@ -36,9 +37,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
@@ -50,7 +54,6 @@ public class RobotContainer {
 
   public static TimeOfFlight timeOfFlight = new TimeOfFlight(24);
   public static TimeOfFlight timeOfFlight2 = new TimeOfFlight(23);
-
 
   public static DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   public static Pixy pixyController = new Pixy();
@@ -73,25 +76,38 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
+    // pressed,
     // cancelling on release.
 
-    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1)).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 1, 3, false, 300)));
-    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1).negate()).whileTrue(new RepeatCommand(new FollowBall(false,false, 3, 2, 3, false, 300)));
-    new JoystickButton(leftJoystick, 3).and(new JoystickButton(leftJoystick, 1)).whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
-    new JoystickButton(leftJoystick, 3).whileTrue(new ArmCommand(armSubsystem));
-    new JoystickButton(leftJoystick, 5).whileTrue(new ServoTestCommand());
+    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1))
+        .whileTrue(new RepeatCommand(new FollowBall(false, false, 3, 1, 3, false, 300)));
+    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1).negate())
+        .whileTrue(new RepeatCommand(new FollowBall(false, false, 3, 2, 3, false, 300)));
+    new JoystickButton(leftJoystick, 3).and(new JoystickButton(leftJoystick, 1))
+        .whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
+    // new JoystickButton(leftJoystick, 3).whileTrue(new ArmCommand(armSubsystem));
+    new JoystickButton(leftJoystick, 4).whileFalse(new OscillateArmCommand(armSubsystem));
+    // new JoystickButton(leftJoystick, 4).whileTrue(new OscillateArmCommand(armSubsystem));
+    // new JoystickButton(leftJoystick, 4).whileTrue(new ArmCommand(armSubsystem, ArmSubsystem.inPos));
+    // new JoystickButton(leftJoystick, 5).whileTrue(new ArmCommand(armSubsystem, ArmSubsystem.outPos));
+    // new JoystickButton(leftJoystick, 5).whileTrue(new ServoTestCommand());
   }
 
   /**

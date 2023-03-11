@@ -14,8 +14,8 @@ package frc.robot;
  */
 public final class Constants {
 
-  public static final int ArmPitchMotorId = 14;
-  public static final int ArmExtensionMotorId = 18;
+  public static final int ArmPitchMotorId = 18;
+  public static final int ArmExtensionMotorId = 14;
 
   public static final int VacuumMotorId = 10;
 
