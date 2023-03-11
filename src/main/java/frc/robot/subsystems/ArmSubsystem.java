@@ -17,6 +17,7 @@ public class ArmSubsystem extends SubsystemBase {
     public static double maxPos = 52;
     public final static double inPos = 5;
     public final static double outPos = 52;
+    public static double count = 0;
     public static double kP, kI, kD, kIz, kFF, kSpeed, mAcc;
 
 
@@ -34,7 +35,7 @@ public class ArmSubsystem extends SubsystemBase {
         kIz = 0; 
         kFF = 0.0;
         kSpeed = 0.2;
-        mAcc = 10;
+        mAcc = 1000;
 
         SmartDashboard.putNumber("kP", kP);
         SmartDashboard.putNumber("kI", kI);
@@ -58,13 +59,14 @@ public class ArmSubsystem extends SubsystemBase {
         m_pidController.setOutputRange(-kSpeed, kSpeed, 0);
         // //m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
         m_pidController.setSmartMotionMaxAccel(mAcc, 0);
-        // m_pidController.setSmartMotionMaxVelocity(200, 0);
+        m_pidController.setSmartMotionMaxVelocity(200, 0);
         // m_pidController.setSmartMotionAllowedClosedLoopError(2, 0);
-   
+        // ArmExtensionMotor.burnFlash();
     }
 
     // public void MoveExtension(double amount) {
     public void MoveExtension(double pos) {
+        ArmSubsystem.count++;
         //double p = SmartDashboard.getNumber("P Gain", 1);
  
         // double p = SmartDashboard.getNumber("kP", 0);
@@ -104,7 +106,7 @@ public class ArmSubsystem extends SubsystemBase {
         REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kPosition);
         // REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kSmartMotion, 0);
         SmartDashboard.putString("Motor Call Result", result.name());
-        // double pos = Util.lerp(minPos, maxPos, amount);
+        // double pos = Util.lerp(minPos,  maxPos, amount);
         // ArmExtensionMotor.getPIDController().setReference(ff, null, 0, speed)
         // double curPos = ArmExtensionMotor.getEncoder().getPosition();
         // SmartDashboard.putNumber("Current pos", curPos);

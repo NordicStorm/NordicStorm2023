@@ -109,6 +109,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Current pos", ArmSubsystem.ArmExtensionMotor.getEncoder().getPosition());
     SmartDashboard.putString("Motor Status", ArmSubsystem.ArmExtensionMotor.getLastError().name());
     SmartDashboard.putNumber("Motor Faults", ArmSubsystem.ArmExtensionMotor.getStickyFaults());
+    SmartDashboard.putNumber("Call Count", ArmSubsystem.count);
   }
 
   @Override

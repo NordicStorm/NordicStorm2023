@@ -103,9 +103,10 @@ public class RobotContainer {
     new JoystickButton(leftJoystick, 3).and(new JoystickButton(leftJoystick, 1))
         .whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
     // new JoystickButton(leftJoystick, 3).whileTrue(new ArmCommand(armSubsystem));
-    new JoystickButton(leftJoystick, 4).whileFalse(new OscillateArmCommand(armSubsystem));
-    // new JoystickButton(leftJoystick, 4).whileTrue(new OscillateArmCommand(armSubsystem));
-    // new JoystickButton(leftJoystick, 4).whileTrue(new ArmCommand(armSubsystem, ArmSubsystem.inPos));
+    // new JoystickButton(leftJoystick, 4).whileFalse(new OscillateArmCommand(armSubsystem));
+    new JoystickButton(leftJoystick, 4).whileTrue(new OscillateArmCommand());
+    new JoystickButton(leftJoystick, 10).whileTrue(new ArmCommand(ArmSubsystem.inPos));
+    new JoystickButton(leftJoystick, 5).whileTrue(new ArmCommand(ArmSubsystem.outPos));
     // new JoystickButton(leftJoystick, 5).whileTrue(new ArmCommand(armSubsystem, ArmSubsystem.outPos));
     // new JoystickButton(leftJoystick, 5).whileTrue(new ServoTestCommand());
   }
