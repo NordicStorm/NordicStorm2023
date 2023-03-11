@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,7 +19,7 @@ public class ArmSubsystem extends SubsystemBase {
     public final static double inPos = 5;
     public final static double outPos = 52;
     public static double count = 0;
-    public static double kP, kI, kD, kIz, kFF, kSpeed, mAcc;
+    public static double kP, kI, kD, kIz, kFF, kSpeed, mAcc, mVel;
 
 
     public ArmSubsystem() {
@@ -29,13 +30,16 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public static void InitalizeArmSubsystem(){
-        kP = 0.1; 
-        kI = 0.0;
-        kD = 0.0; 
-        kIz = 0; 
+        kP = 0.5; 
+        kI = 0.5;
+        kD = 0; 
+        kIz = 0;
         kFF = 0.0;
-        kSpeed = 0.2;
-        mAcc = 1000;
+        kSpeed = 0.05;
+        mAcc = 10;
+        mVel = 10;
+
+        ArmPitchMotor.setIdleMode(IdleMode.kBrake);
 
         SmartDashboard.putNumber("kP", kP);
         SmartDashboard.putNumber("kI", kI);
@@ -103,8 +107,8 @@ public class ArmSubsystem extends SubsystemBase {
         // amount = (amount + 1) / 2;
 
         SmartDashboard.putNumber("Target Position", pos);
-        REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kPosition);
-        // REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kSmartMotion, 0);
+        // REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kPosition);
+        REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kSmartMotion, 0);
         SmartDashboard.putString("Motor Call Result", result.name());
         // double pos = Util.lerp(minPos,  maxPos, amount);
         // ArmExtensionMotor.getPIDController().setReference(ff, null, 0, speed)
@@ -135,7 +139,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void MovePitch(double amnt) {
-        // ArmPitchMotor.set(amnt);
+        ArmPitchMotor.set(amnt);
     }
 
 }

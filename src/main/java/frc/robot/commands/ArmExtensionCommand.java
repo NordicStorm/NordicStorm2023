@@ -3,11 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
-public class ArmCommand extends CommandBase{
+public class ArmExtensionCommand extends CommandBase{
     
     private double pos;
 
-    public ArmCommand(double pos){
+    public ArmExtensionCommand(double pos){
         this.pos = pos;
 
         this.addRequirements(RobotContainer.armSubsystem);
