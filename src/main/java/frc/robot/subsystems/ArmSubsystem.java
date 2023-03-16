@@ -4,7 +4,10 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -40,6 +43,7 @@ public class ArmSubsystem extends SubsystemBase {
         mVel = 10;
 
         ArmPitchMotor.setIdleMode(IdleMode.kBrake);
+        
 
         SmartDashboard.putNumber("kP", kP);
         SmartDashboard.putNumber("kI", kI);
@@ -66,6 +70,18 @@ public class ArmSubsystem extends SubsystemBase {
         m_pidController.setSmartMotionMaxVelocity(200, 0);
         // m_pidController.setSmartMotionAllowedClosedLoopError(2, 0);
         // ArmExtensionMotor.burnFlash();
+
+
+
+        //Yes this is intentional the pitch encoder is wired into the extension motor's controller /shrug
+        //ArmPitchMotor.getPIDController().setFeedbackDevice(ArmExtensionMotor.getAbsoluteEncoder(Type.kDutyCycle));
+        
+        
+        ArmPitchMotor.getPIDController().setOutputRange(-0.5, 0.5);
+        
+        //I have no idea what the numbers for this are yet
+        ArmPitchMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+        ArmPitchMotor.setSoftLimit(SoftLimitDirection.kReverse, 0.5f);
     }
 
     // public void MoveExtension(double amount) {
@@ -110,6 +126,7 @@ public class ArmSubsystem extends SubsystemBase {
         // REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kPosition);
         REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kSmartMotion, 0);
         SmartDashboard.putString("Motor Call Result", result.name());
+        
         // double pos = Util.lerp(minPos,  maxPos, amount);
         // ArmExtensionMotor.getPIDController().setReference(ff, null, 0, speed)
         // double curPos = ArmExtensionMotor.getEncoder().getPosition();
@@ -139,7 +156,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void MovePitch(double amnt) {
-        ArmPitchMotor.set(amnt);
+        ArmPitchMotor.getPIDController().setReference(amnt, ControlType.kPosition);
     }
 
 }

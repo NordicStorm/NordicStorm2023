@@ -22,7 +22,7 @@ public class VacuumManualControlCommand extends CommandBase {
 
         vacuumSubsystem.closeSolenoid();
 
-        if (vacuumSubsystem.getVacuumPercentage() >= 1.0f) {
+        if (vacuumSubsystem.getVacuumPercentage() >= 0.80f) {
             vacuumSubsystem.stopVacuum();
             return;
         }

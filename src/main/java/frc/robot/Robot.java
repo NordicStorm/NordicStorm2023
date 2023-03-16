@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.TimeOfFlightSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -106,10 +109,17 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Current pos", ArmSubsystem.ArmExtensionMotor.getEncoder().getPosition());
-    SmartDashboard.putString("Motor Status", ArmSubsystem.ArmExtensionMotor.getLastError().name());
-    SmartDashboard.putNumber("Motor Faults", ArmSubsystem.ArmExtensionMotor.getStickyFaults());
+    SmartDashboard.putNumber("Current pos", ArmSubsystem.ArmPitchMotor.getEncoder().getPosition());
+    SmartDashboard.putString("Motor Status", ArmSubsystem.ArmPitchMotor.getLastError().name());
+    SmartDashboard.putNumber("Motor Faults", ArmSubsystem.ArmPitchMotor.getStickyFaults());
     SmartDashboard.putNumber("Call Count", ArmSubsystem.count);
+    SmartDashboard.putNumber("Motor Current", ArmSubsystem.ArmPitchMotor.getOutputCurrent());
+    SmartDashboard.putNumber("Bus Voltage", ArmSubsystem.ArmPitchMotor.getBusVoltage());
+
+    SmartDashboard.putNumber("Arm Pitch Encoder", ArmSubsystem.ArmExtensionMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
+    SmartDashboard.putNumber("Sensor 1 Dist", TimeOfFlightSubsystem.TimeOfFlight1.getRange());
+    SmartDashboard.putNumber("Sensor 2 Dist", TimeOfFlightSubsystem.TimeOfFlight2.getRange());
+    
   }
 
   @Override

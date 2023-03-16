@@ -20,6 +20,15 @@ public final class Constants {
   public static final int VacuumMotorId = 10;
 
 
+  //Edit these to proper values
+  public static final double ArmExtendOutPos = 45;
+  public static final double ArmExtendInPos = 5;
+
+  //Edit these to proper values
+  public static final double ArmPitchOutPos = 1234;
+  public static final double ArmPitchNominalPos = 1234;
+
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }

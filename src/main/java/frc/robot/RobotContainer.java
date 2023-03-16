@@ -5,22 +5,25 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ArmExtensionCommand;
-import frc.robot.commands.ArmPitchCommand;
 import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExamplePathAuto;
 import frc.robot.commands.FollowBall;
+import frc.robot.commands.IntakeTestCmd;
 import frc.robot.commands.OperatorControl;
 import frc.robot.commands.OscillateArmCommand;
 import frc.robot.commands.ServoTestCommand;
+import frc.robot.commands.ArmCommands.ArmExtensionCommand;
+import frc.robot.commands.ArmCommands.ArmPitchCommand;
 import frc.robot.commands.VacuumCommands.VacuumDefaultCommand;
 import frc.robot.commands.VacuumCommands.VacuumManualControlCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Pixy;
+import frc.robot.subsystems.TimeOfFlightSubsystem;
 import frc.robot.subsystems.VacuumSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -53,15 +56,15 @@ public class RobotContainer {
   public static final Joystick leftJoystick = new Joystick(1);
   public static final Joystick rightJoystick = new Joystick(0);
 
-  public static TimeOfFlight timeOfFlight = new TimeOfFlight(24);
-  public static TimeOfFlight timeOfFlight2 = new TimeOfFlight(23);
-
   public static DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   public static Pixy pixyController = new Pixy();
 
   public static VacuumSubsystem vacuumSubsystem = new VacuumSubsystem();
 
   public static ArmSubsystem armSubsystem = new ArmSubsystem();
+
+  public static TimeOfFlightSubsystem timeOfFlightSubsystem = new TimeOfFlightSubsystem();
+  public static IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -72,7 +75,7 @@ public class RobotContainer {
     //CommandScheduler.getInstance().setDefaultCommand(driveTrain, new OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
     vacuumSubsystem.setDefaultCommand(new VacuumDefaultCommand(vacuumSubsystem));
-    
+    armSubsystem.setDefaultCommand(new ArmPitchCommand());
     configureBindings();
   }
 
@@ -101,15 +104,16 @@ public class RobotContainer {
         .whileTrue(new RepeatCommand(new FollowBall(false, false, 3, 1, 3, false, 300)));
     new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1).negate())
         .whileTrue(new RepeatCommand(new FollowBall(false, false, 3, 2, 3, false, 300)));
-    // new JoystickButton(leftJoystick, 3).and(new JoystickButton(leftJoystick, 1))
-    //     .whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
-    new JoystickButton(leftJoystick, 3).whileTrue(new ArmPitchCommand());
+     new JoystickButton(leftJoystick, 3).and(new JoystickButton(leftJoystick, 1))
+         .whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
+   // new JoystickButton(leftJoystick, 3).whileTrue(new ArmPitchCommand());
     // new JoystickButton(leftJoystick, 4).whileFalse(new OscillateArmCommand(armSubsystem));
-    new JoystickButton(leftJoystick, 4).whileTrue(new OscillateArmCommand());
+    //new JoystickButton(leftJoystick, 4).whileTrue(new OscillateArmCommand());
     new JoystickButton(leftJoystick, 10).whileTrue(new ArmExtensionCommand(ArmSubsystem.inPos));
     new JoystickButton(leftJoystick, 5).whileTrue(new ArmExtensionCommand(ArmSubsystem.outPos));
     // new JoystickButton(leftJoystick, 5).whileTrue(new ArmCommand(armSubsystem, ArmSubsystem.outPos));
     // new JoystickButton(leftJoystick, 5).whileTrue(new ServoTestCommand());
+    new JoystickButton(leftJoystick, 4).whileTrue(new IntakeTestCmd());
   }
 
   /**
