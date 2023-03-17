@@ -50,6 +50,19 @@ import frc.robot.commands.paths.PathableDrivetrain;
 
 
 /**
+ * Speed gains detection:
+ * Set chassis volts to 12. Read peak raw speed = rs, write down. Read peak getStateVelocity, write down. 
+ now Kf*input must equal 1023 when input = rs. So Kf = 1023/rs. 
+ 
+ * set chassis volts to 9. Read raw speed, write down. kf*input = 0.75. Kf = 767/rs
+ * Take the avg of those two Kf values to use
+ * Then do a bunch of testing speeds: Use the velocity in meters per sec, set to a solid 2.5 forward (for example). SmartDashboard output the readStateVelocity(). 
+
+    Tweak kP up by 0.005 and see if it improves. Keep tuning up kP until the velocity to close to what you want. Then repeat at a different velocity. You might need to reduce kF
+	  a bit as well.
+	  
+         double rawSpeed = frontLeftModule.getTalonDriveMotor().getSelectedSensorVelocity();
+		 frontLeftModule.readStateVelocity();
  *
  */
 public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivetrain {
@@ -226,6 +239,8 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     }
     @Override
     public void periodic() {
+
+        SmartDashboard.putNumber("NavX Gyro Pitch", getGyroPitch());
 
         for(int i = 0; i<swerveModules.size(); i++){
             currentSwerveStates[i]=Util.stateFromModule(swerveModules.get(i));

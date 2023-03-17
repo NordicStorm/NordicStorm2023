@@ -25,6 +25,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Pixy;
 import frc.robot.subsystems.TimeOfFlightSubsystem;
 import frc.robot.subsystems.VacuumSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.playingwithfusion.TimeOfFlight;
@@ -66,12 +67,16 @@ public class RobotContainer {
   public static TimeOfFlightSubsystem timeOfFlightSubsystem = new TimeOfFlightSubsystem();
   public static IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
+  public static VisionSubsystem visionSubsystem = new VisionSubsystem();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     VacuumSubsystem.initalizePcm();
     ArmSubsystem.InitalizeArmSubsystem();
     SmartDashboard.putNumber("Vacuum Speed", 0.30);
+    SmartDashboard.putBoolean("DriveOntoRamp", true);
+
     //CommandScheduler.getInstance().setDefaultCommand(driveTrain, new OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
     vacuumSubsystem.setDefaultCommand(new VacuumDefaultCommand(vacuumSubsystem));
