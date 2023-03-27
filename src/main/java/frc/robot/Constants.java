@@ -19,6 +19,16 @@ public final class Constants {
 
   public static final int VacuumMotorId = 10;
 
+  //Servo ids
+  public static final int ArmHandRollServoId = 0;
+  public static final int ArmHandPitchServoId = 1;
+  public static final int IntakeActuator = 2;
+
+  //change this once we know motor ids!!!!
+  public static final int IntakeWheelRMotorId = 16;
+  public static final int IntakeWheelLMotorId = 16;
+
+  public static final int IntakeBeltMotorId= 15;
 
   //Edit these to proper values
   public static final double ArmExtendOutPos = 45;

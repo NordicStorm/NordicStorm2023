@@ -10,11 +10,13 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExamplePathAuto;
 import frc.robot.commands.FollowBall;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeTestCmd;
 import frc.robot.commands.OperatorControl;
 import frc.robot.commands.OscillateArmCommand;
 import frc.robot.commands.ServoTestCommand;
-import frc.robot.commands.ArmCommands.ArmExtensionCommand;
+import frc.robot.commands.ArmCommands.ArmExtendToCmd;
+import frc.robot.commands.ArmCommands.ArmOperatorControl;
 import frc.robot.commands.ArmCommands.ArmPitchCommand;
 import frc.robot.commands.VacuumCommands.VacuumDefaultCommand;
 import frc.robot.commands.VacuumCommands.VacuumManualControlCommand;
@@ -27,6 +29,8 @@ import frc.robot.subsystems.TimeOfFlightSubsystem;
 import frc.robot.subsystems.VacuumSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
+import java.util.function.BooleanSupplier;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.playingwithfusion.TimeOfFlight;
 
@@ -35,6 +39,7 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -76,6 +81,8 @@ public class RobotContainer {
     ArmSubsystem.InitalizeArmSubsystem();
     SmartDashboard.putNumber("Vacuum Speed", 0.30);
     SmartDashboard.putBoolean("DriveOntoRamp", true);
+    SmartDashboard.putNumber("Intake Belt Speed", 0.5);
+    SmartDashboard.putNumber("Intake Wheel Speed", 0.3);
 
     //CommandScheduler.getInstance().setDefaultCommand(driveTrain, new OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
@@ -105,20 +112,29 @@ public class RobotContainer {
     // pressed,
     // cancelling on release.
 
-    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1))
-        .whileTrue(new RepeatCommand(new FollowBall(false, false, 3, 1, 3, false, 300)));
-    new JoystickButton(leftJoystick, 2).and(new JoystickButton(leftJoystick, 1).negate())
-        .whileTrue(new RepeatCommand(new FollowBall(false, false, 3, 2, 3, false, 300)));
-     new JoystickButton(leftJoystick, 3).and(new JoystickButton(leftJoystick, 1))
-         .whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
-   // new JoystickButton(leftJoystick, 3).whileTrue(new ArmPitchCommand());
+    new JoystickButton(rightJoystick, 4).whileTrue(
+          new ParallelCommandGroup(new RepeatCommand(new FollowBall(false, false, 3, 1, 3, false, 300)), new IntakeCommand(1.0, -0.5)));
+    
+    
+        new JoystickButton(rightJoystick, 3)
+        .whileTrue(
+          new ParallelCommandGroup(new RepeatCommand(new FollowBall(false, false, 3, 2, 3, false, 300)), new IntakeCommand(1.0, -0.5)));
+
+   // new JoystickButton(leftJoystick, 1).whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
+
+    new JoystickButton(leftJoystick, 7).toggleOnTrue(new ArmOperatorControl());
+
     // new JoystickButton(leftJoystick, 4).whileFalse(new OscillateArmCommand(armSubsystem));
     //new JoystickButton(leftJoystick, 4).whileTrue(new OscillateArmCommand());
-    new JoystickButton(leftJoystick, 10).whileTrue(new ArmExtensionCommand(ArmSubsystem.inPos));
-    new JoystickButton(leftJoystick, 5).whileTrue(new ArmExtensionCommand(ArmSubsystem.outPos));
+    new JoystickButton(leftJoystick, 10).whileTrue(new ArmExtendToCmd(ArmSubsystem.inPos));
+    new JoystickButton(leftJoystick, 5).whileTrue(new ArmExtendToCmd(ArmSubsystem.outPos));
     // new JoystickButton(leftJoystick, 5).whileTrue(new ArmCommand(armSubsystem, ArmSubsystem.outPos));
     // new JoystickButton(leftJoystick, 5).whileTrue(new ServoTestCommand());
     new JoystickButton(leftJoystick, 4).whileTrue(new IntakeTestCmd());
+    new JoystickButton(leftJoystick, 6).toggleOnTrue(new IntakeCommand(1.0, -0.5));
+    
+    //Reverse
+    new JoystickButton(rightJoystick, 2).whileTrue(new IntakeCommand(-1, 0.5));
   }
 
   /**

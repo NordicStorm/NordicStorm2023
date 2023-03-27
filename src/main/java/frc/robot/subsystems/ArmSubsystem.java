@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.PWM.PeriodMultiplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,6 +18,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     public static CANSparkMax ArmPitchMotor = new CANSparkMax(Constants.ArmPitchMotorId, MotorType.kBrushless);
     public static CANSparkMax ArmExtensionMotor = new CANSparkMax(Constants.ArmExtensionMotorId, MotorType.kBrushless);
+
+    public static Servo handRollServo = new Servo(0);
+    public static Servo handPitchServo = new Servo(1);
+
 
     public static double minPos = 5;
     public static double maxPos = 52;
@@ -43,8 +49,15 @@ public class ArmSubsystem extends SubsystemBase {
         mVel = 10;
 
         ArmPitchMotor.setIdleMode(IdleMode.kBrake);
-        
 
+
+        handRollServo.setBounds(2.5, 0, 0, 0, 0.5);
+        handRollServo.setPeriodMultiplier(PeriodMultiplier.k1X);
+    
+        handPitchServo.setBounds(2.5, 0, 0, 0, 0.5);
+        handPitchServo.setPeriodMultiplier(PeriodMultiplier.k1X);
+        
+        
         SmartDashboard.putNumber("kP", kP);
         SmartDashboard.putNumber("kI", kI);
         SmartDashboard.putNumber("kD", kD);
@@ -71,12 +84,9 @@ public class ArmSubsystem extends SubsystemBase {
         // m_pidController.setSmartMotionAllowedClosedLoopError(2, 0);
         // ArmExtensionMotor.burnFlash();
 
-
-
-        //Yes this is intentional the pitch encoder is wired into the extension motor's controller /shrug
-        //ArmPitchMotor.getPIDController().setFeedbackDevice(ArmExtensionMotor.getAbsoluteEncoder(Type.kDutyCycle));
         
-        
+        ArmPitchMotor.getPIDController().setFeedbackDevice(ArmPitchMotor.getAbsoluteEncoder(Type.kDutyCycle));
+
         ArmPitchMotor.getPIDController().setOutputRange(-0.5, 0.5);
         
         //I have no idea what the numbers for this are yet
@@ -124,7 +134,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Target Position", pos);
         // REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kPosition);
-        REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kSmartMotion, 0);
+        REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kPosition, 0);
         SmartDashboard.putString("Motor Call Result", result.name());
         
         // double pos = Util.lerp(minPos,  maxPos, amount);
@@ -157,6 +167,38 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void MovePitch(double amnt) {
         ArmPitchMotor.getPIDController().setReference(amnt, ControlType.kPosition);
+    }
+
+    public void MoveHandPitchAngle(double angle){
+        handPitchServo.setAngle(angle);
+    }
+
+    public void MoveHandRollAngle(double angle){
+        handRollServo.setAngle(angle);
+    }
+
+    public void MoveHandPitchAbs(double amnt){
+        handPitchServo.set(amnt);
+    }
+
+    public void MoveHandRollAbs(double amnt){
+        handRollServo.set(amnt);
+    }
+
+    public void MoveHandPitchRelative(double amnt){
+        handPitchServo.set(handPitchServo.getPosition() + amnt);
+    }
+
+    public void MoveHandRollRelative(double amnt){
+        handRollServo.set(handRollServo.getPosition() + amnt);
+    }
+    
+    public void MoveHandPitchRelativeAngle(double degrees){
+        handPitchServo.setAngle(handPitchServo.getAngle() + degrees);
+    }
+
+    public void MoveHandRollRelativeAngle(double degrees){
+        handRollServo.setAngle(handRollServo.getAngle() + degrees);
     }
 
 }

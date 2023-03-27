@@ -182,9 +182,9 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
             List<PixyObject> objects = RobotContainer.pixyController.readObjects();
             PixyObject object = findTarget(objects);
             if (object != null) {
-                //System.out.println("width:" + object.width);
-                //System.out.println("height:" + object.height);
-                //System.out.println("y:" + object.y);
+                System.out.println("width:" + object.width);
+                System.out.println("height:" + object.height);
+                System.out.println("y:" + object.y);
 
                 if (object.width > stopWidth && object.y+object.height >= 190) {// 207 is max/at the bottom of the bot
                     widthMetFor = object.trackingIndex;
@@ -228,8 +228,8 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
             forwardValue = chargeSpeed;
             turnValue = 0;
         }
-        turnValue *= Math.abs(RobotContainer.leftJoystick.getY());
-        forwardValue *= Math.abs(RobotContainer.leftJoystick.getY());
+        turnValue *= Math.abs(RobotContainer.rightJoystick.getY());
+        forwardValue *= Math.abs(RobotContainer.rightJoystick.getY());
         RobotContainer.driveTrain.limitDrive(new ChassisSpeeds(forwardValue, -turnValue * 0.1, -turnValue), 2);
 
     }
