@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,7 +16,7 @@ public class VacuumSubsystem extends SubsystemBase {
 
     private static final AnalogInput VacuumSensor = new AnalogInput(0);
     private static final CANSparkMax VacuumMotor = new CANSparkMax(Constants.VacuumMotorId, MotorType.kBrushless);
-    private static PneumaticsControlModule pControlModule = new PneumaticsControlModule(19);
+    private static PneumaticHub pControlModule = new PneumaticHub(19);
 
     private static Solenoid vacuumRepressurizationSolenoid;
 

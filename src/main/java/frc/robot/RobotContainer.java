@@ -18,6 +18,7 @@ import frc.robot.commands.ServoTestCommand;
 import frc.robot.commands.ArmCommands.ArmExtendToCmd;
 import frc.robot.commands.ArmCommands.ArmOperatorControl;
 import frc.robot.commands.ArmCommands.ArmPitchCommand;
+import frc.robot.commands.TRexArms.TRexArmsUpCommand;
 import frc.robot.commands.VacuumCommands.VacuumDefaultCommand;
 import frc.robot.commands.VacuumCommands.VacuumManualControlCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -38,7 +39,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -87,7 +90,6 @@ public class RobotContainer {
     //CommandScheduler.getInstance().setDefaultCommand(driveTrain, new OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
     vacuumSubsystem.setDefaultCommand(new VacuumDefaultCommand(vacuumSubsystem));
-    armSubsystem.setDefaultCommand(new ArmPitchCommand());
     configureBindings();
   }
 
@@ -113,16 +115,26 @@ public class RobotContainer {
     // cancelling on release.
 
     new JoystickButton(rightJoystick, 4).whileTrue(
-          new ParallelCommandGroup(new RepeatCommand(new FollowBall(false, false, 3, 1, 3, false, 300)), new IntakeCommand(1.0, -0.5)));
+          new ParallelCommandGroup(new RepeatCommand(new FollowBall(false, false, 3, 1, 3, false, 300)), new IntakeCommand(-1.0, 0.1)));
     
     
         new JoystickButton(rightJoystick, 3)
         .whileTrue(
-          new ParallelCommandGroup(new RepeatCommand(new FollowBall(false, false, 3, 2, 3, false, 300)), new IntakeCommand(1.0, -0.5)));
+          new ParallelCommandGroup(new RepeatCommand(new FollowBall(false, false, 3, 2, 3, false, 300)), new IntakeCommand(-1.0, 0.1)));
+
+
+          //Reset gyro
+    new JoystickButton(rightJoystick, 8).onTrue(new InstantCommand() {
+      @Override
+      public void execute(){
+        driveTrain.zeroGyroscope();
+      }
+    });
 
    // new JoystickButton(leftJoystick, 1).whileTrue(new VacuumManualControlCommand(vacuumSubsystem));
 
     new JoystickButton(leftJoystick, 7).toggleOnTrue(new ArmOperatorControl());
+    new JoystickButton(leftJoystick, 9).whileTrue(new VacuumManualControlCommand(RobotContainer.vacuumSubsystem));
 
     // new JoystickButton(leftJoystick, 4).whileFalse(new OscillateArmCommand(armSubsystem));
     //new JoystickButton(leftJoystick, 4).whileTrue(new OscillateArmCommand());
@@ -131,10 +143,35 @@ public class RobotContainer {
     // new JoystickButton(leftJoystick, 5).whileTrue(new ArmCommand(armSubsystem, ArmSubsystem.outPos));
     // new JoystickButton(leftJoystick, 5).whileTrue(new ServoTestCommand());
     new JoystickButton(leftJoystick, 4).whileTrue(new IntakeTestCmd());
-    new JoystickButton(leftJoystick, 6).toggleOnTrue(new IntakeCommand(1.0, -0.5));
+    new JoystickButton(leftJoystick, 6).toggleOnTrue(new IntakeCommand(-1.0, 0.1));
+    new JoystickButton(rightJoystick, 9).whileTrue(new TRexArmsUpCommand(0.3));
     
     //Reverse
-    new JoystickButton(rightJoystick, 2).whileTrue(new IntakeCommand(-1, 0.5));
+    new JoystickButton(rightJoystick, 2).whileTrue(new IntakeCommand(1, -0.1));
+  
+    new JoystickButton(rightJoystick, 7).toggleOnTrue(new CommandBase() {
+      @Override
+      public void execute(){
+        intakeSubsystem.setIntakeServo(1);
+      }
+
+      @Override
+      public void end(boolean graceful){
+        intakeSubsystem.setIntakeServo(0);
+      }
+    });
+
+    new JoystickButton(leftJoystick, 7).toggleOnTrue(new CommandBase() {
+      @Override
+      public void execute(){
+        intakeSubsystem.setIntakeServo(1);
+      }
+
+      @Override
+      public void end(boolean graceful){
+        intakeSubsystem.setIntakeServo(0);
+      }
+    });
   }
 
   /**

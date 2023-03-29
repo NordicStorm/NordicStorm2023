@@ -31,9 +31,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -94,6 +96,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     private Pose2d pose;
     private final AHRS navx = new AHRS(Port.kMXP);
+    private final AHRS mininavx = new AHRS(SerialPort.Port.kUSB2);
 
     // this is basically the 'privilege level' the rotation control ability is at.
     // So 0 means it will take anything, 1 means 1 or higher.
@@ -116,25 +119,25 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_LEFT_MODULE_STEER_MOTOR, Constants.FRONT_LEFT_MODULE_STEER_ENCODER,
-                Constants.FRONT_LEFT_MODULE_STEER_OFFSET);
+                Units.degreesToRadians(-356.65740966796875));
 
         frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_RIGHT_MODULE_STEER_MOTOR, Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
-                Constants.FRONT_RIGHT_MODULE_STEER_OFFSET);
+                Units.degreesToRadians(-327.83203125 + 180));
 
         backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_LEFT_MODULE_STEER_MOTOR, Constants.BACK_LEFT_MODULE_STEER_ENCODER,
-                Constants.BACK_LEFT_MODULE_STEER_OFFSET);
+                Units.degreesToRadians(-75.05035400390625));
 
         backRightModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_RIGHT_MODULE_STEER_MOTOR, Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
-                Constants.BACK_RIGHT_MODULE_STEER_OFFSET);
+                Units.degreesToRadians(-292.57965087890625 + 180));
         swerveModules.add(frontLeftModule);
         swerveModules.add(frontRightModule);
         swerveModules.add(backLeftModule);
@@ -165,7 +168,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     }
 
     public void zeroGyroscope() {
-        navx.zeroYaw();
+        mininavx.zeroYaw();
     }
 
     /**
@@ -174,7 +177,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
      * @return current angle in degrees
      */
     public double getGyroDegrees() {
-        return -navx.getAngle();
+        return mininavx.getAngle();
     }
 
     
@@ -186,7 +189,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
      * @return
      */
     public double getGyroPitch(){
-        return navx.getRoll(); // because of orientation of navx this is pitch
+        return mininavx.getPitch(); // because of orientation of navx this is pitch
     }
     
     public Pose2d getPose() {
@@ -203,9 +206,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     }
 
     public void resetAngle() {
-        navx.reset();
-        navx.setAngleAdjustment(0);
-        
+        mininavx.reset();
     }
     /**
      * This will get added to the angle result to offset it.
@@ -244,6 +245,8 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
         for(int i = 0; i<swerveModules.size(); i++){
             currentSwerveStates[i]=Util.stateFromModule(swerveModules.get(i));
+
+            SmartDashboard.putNumber("Module " + i, Units.radiansToDegrees(swerveModules.get(i).getSteerAngle()));
         }
         updateModulePositions();
 

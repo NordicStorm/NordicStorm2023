@@ -24,6 +24,8 @@ public class VisionSubsystem extends SubsystemBase {
     public static PhotonCamera photonCamera;
     public static AprilTagFieldLayout layout;
 
+    public static PhotonPoseEstimator poseEstimator;
+
     public static RollingAverage distanceAverage = new RollingAverage(5);
 
     public VisionSubsystem() {
@@ -35,8 +37,10 @@ public class VisionSubsystem extends SubsystemBase {
             e.printStackTrace();
         }
 
-        photonCamera = new PhotonCamera("ArduCam");
+        Transform3d transform3d = new Transform3d(new Translation3d(0.17145, 0.5588, -0.2159), new Rotation3d(0, 0, 0));
 
+        photonCamera = new PhotonCamera("ArduCam");
+        poseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, photonCamera, transform3d);
     }
 
     public double getDistance(double height){
@@ -48,6 +52,29 @@ public class VisionSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
             var result = photonCamera.getLatestResult();
+
+            if(result.hasTargets() && Math.abs(result.getBestTarget().getYaw()) > 20){
+                var best = result.getBestTarget();
+
+         
+
+                //if(best.getPoseAmbiguity() < 0.9)
+                //return;
+                
+                poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose());
+                var estimated = poseEstimator.update();
+                
+                
+
+                if(!estimated.isPresent())
+                return;
+
+                var newPose = estimated.get();
+
+                RobotContainer.driveTrain.setPose(newPose.estimatedPose.toPose2d());
+            }
+            /* 
+
             if(result.hasTargets() && Math.abs(result.getBestTarget().getYaw()) < 20){
 
                 var bestTarget = result.getBestTarget();
@@ -78,6 +105,6 @@ public class VisionSubsystem extends SubsystemBase {
                 return;   
             }
             distanceAverage.clear();
-    }
-
+            */
+        }
 }

@@ -116,7 +116,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Motor Current", ArmSubsystem.ArmPitchMotor.getOutputCurrent());
     SmartDashboard.putNumber("Bus Voltage", ArmSubsystem.ArmPitchMotor.getBusVoltage());
 
-    SmartDashboard.putNumber("Arm Pitch Encoder", ArmSubsystem.ArmExtensionMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
+    SmartDashboard.putNumber("Arm Pitch Encoder Abs", ArmSubsystem.ArmPitchMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
+    SmartDashboard.putNumber("Arm Pitch Encoder", ArmSubsystem.ArmPitchMotor.getEncoder().getPosition());
+    SmartDashboard.putNumber("Arm Ext Encoder", ArmSubsystem.ArmExtensionMotor.getEncoder().getPosition());
+
     SmartDashboard.putNumber("Sensor 1 Dist", TimeOfFlightSubsystem.TimeOfFlight1.getRange());
     SmartDashboard.putNumber("Sensor 2 Dist", TimeOfFlightSubsystem.TimeOfFlight2.getRange());
     

@@ -14,30 +14,39 @@ public class ArmOperatorControl extends CommandBase {
         this.addRequirements(RobotContainer.armSubsystem);
     }
 
+    private double targetPos = 0.5;
+
     @Override
     public void execute() {
         // RobotContainer.armSubsystem.MoveExtension(pos);
 
         if (RobotContainer.leftJoystick.getTrigger()) {
 
-            RobotContainer.armSubsystem.MoveHandPitchRelativeAngle(RobotContainer.leftJoystick.getY() * 0.1);
-            RobotContainer.armSubsystem.MoveHandRollRelativeAngle(RobotContainer.leftJoystick.getX() * 0.1);
+            RobotContainer.armSubsystem.MoveHandPitchAbs((RobotContainer.leftJoystick.getY() + 1) / 2);
+            RobotContainer.armSubsystem.MoveHandRollAbs((RobotContainer.leftJoystick.getX() + 1) / 2);
             return;
         }
         RobotContainer.armSubsystem
-                .MoveExtension(Util.lerp(4, 30, Util.clamp(RobotContainer.leftJoystick.getY(), 0, 1)));
+                .MoveExtension(Util.lerp(0, 36, Util.clamp(RobotContainer.leftJoystick.getY(), 0, 1)));
         // armSubsystem.MovePitch(RobotContainer.leftJoystick.getX());
-        double throttle = ((-RobotContainer.leftJoystick.getZ() + 1) / 2);
-        RobotContainer.armSubsystem.MovePitch(Util.lerp(0, 200, Util.clamp(RobotContainer.leftJoystick.getX(), 0, 1)));
+        double throttle =RobotContainer.leftJoystick.getX();
+       
+        if(Math.abs(throttle) < 0.01)
+        throttle = 0;
+
+        targetPos += throttle * 0.003;
+        targetPos = Util.clamp(targetPos, 0.24, 0.5);
+        SmartDashboard.putNumber("Target Pos", targetPos);
+       RobotContainer.armSubsystem.MovePitch(targetPos);
         SmartDashboard.putNumber("Pitch Throttle", throttle);
 
     }
 
     @Override
     public void end(boolean graceful) {
-        RobotContainer.armSubsystem.MoveExtension(4);
-        RobotContainer.armSubsystem.MovePitch(0);
-        RobotContainer.armSubsystem.MoveHandPitchAbs(0.5);
-        RobotContainer.armSubsystem.MoveHandRollAbs(0.5);
+        //RobotContainer.armSubsystem.MoveExtension(0);
+        //RobotContainer.armSubsystem.MovePitch(0);
+       // RobotContainer.armSubsystem.MoveHandPitchAbs(0.5);
+        //RobotContainer.armSubsystem.MoveHandRollAbs(0.5);
     }
 }

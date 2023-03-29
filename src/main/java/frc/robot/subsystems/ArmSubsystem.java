@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -8,11 +10,14 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import edu.wpi.first.util.function.FloatSupplier;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.PWM.PeriodMultiplier;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Util;
 
 public class ArmSubsystem extends SubsystemBase {
 
@@ -43,18 +48,18 @@ public class ArmSubsystem extends SubsystemBase {
         kI = 0.5;
         kD = 0; 
         kIz = 0;
-        kFF = 0.0;
-        kSpeed = 0.05;
+        kFF = 0.1;
+        kSpeed = 0.1;
         mAcc = 10;
         mVel = 10;
 
         ArmPitchMotor.setIdleMode(IdleMode.kBrake);
+        ArmExtensionMotor.setIdleMode(IdleMode.kBrake);
 
-
-        handRollServo.setBounds(2.5, 0, 0, 0, 0.5);
+        handRollServo.setBounds(2.5, 0,0,0, 0.5);
         handRollServo.setPeriodMultiplier(PeriodMultiplier.k1X);
     
-        handPitchServo.setBounds(2.5, 0, 0, 0, 0.5);
+        handPitchServo.setBounds(2.5, 0,0,0, 0.5);
         handPitchServo.setPeriodMultiplier(PeriodMultiplier.k1X);
         
         
@@ -84,14 +89,25 @@ public class ArmSubsystem extends SubsystemBase {
         // m_pidController.setSmartMotionAllowedClosedLoopError(2, 0);
         // ArmExtensionMotor.burnFlash();
 
-        
+       
         ArmPitchMotor.getPIDController().setFeedbackDevice(ArmPitchMotor.getAbsoluteEncoder(Type.kDutyCycle));
 
-        ArmPitchMotor.getPIDController().setOutputRange(-0.5, 0.5);
+        ArmPitchMotor.getPIDController().setOutputRange(-0.4, 0.6);
+        ArmPitchMotor.getPIDController().setP(2);
+        ArmPitchMotor.getPIDController().setI(0.0);
+        ArmPitchMotor.getPIDController().setD(0.05);
+        ArmPitchMotor.getPIDController().setFF(0.1);
         
         //I have no idea what the numbers for this are yet
-        ArmPitchMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
-        ArmPitchMotor.setSoftLimit(SoftLimitDirection.kReverse, 0.5f);
+        //ArmPitchMotor.setSoftLimit(SoftLimitDirection.kForward, 0);
+       // ArmPitchMotor.setSoftLimit(SoftLimitDirection.kReverse, 0.5f);
+
+
+        
+    }
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Arm Pitch Abd", ArmPitchMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     }
 
     // public void MoveExtension(double amount) {
@@ -136,7 +152,8 @@ public class ArmSubsystem extends SubsystemBase {
         // REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kPosition);
         REVLibError result = ArmExtensionMotor.getPIDController().setReference(pos, ControlType.kPosition, 0);
         SmartDashboard.putString("Motor Call Result", result.name());
-        
+    
+
         // double pos = Util.lerp(minPos,  maxPos, amount);
         // ArmExtensionMotor.getPIDController().setReference(ff, null, 0, speed)
         // double curPos = ArmExtensionMotor.getEncoder().getPosition();
@@ -166,6 +183,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void MovePitch(double amnt) {
+        SmartDashboard.putNumber("Pitch target", amnt);
         ArmPitchMotor.getPIDController().setReference(amnt, ControlType.kPosition);
     }
 
@@ -186,11 +204,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void MoveHandPitchRelative(double amnt){
-        handPitchServo.set(handPitchServo.getPosition() + amnt);
+        handPitchServo.set(Util.clamp(handPitchServo.getPosition() + amnt, 0, 1));
     }
 
     public void MoveHandRollRelative(double amnt){
-        handRollServo.set(handRollServo.getPosition() + amnt);
+        handRollServo.set(Util.clamp(handRollServo.getPosition() + amnt, 0, 1));
     }
     
     public void MoveHandPitchRelativeAngle(double degrees){
