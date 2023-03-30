@@ -18,7 +18,7 @@ public class DropCube extends CommandBase {
 
     @Override
     public void execute() {
-        RobotContainer.intakeSubsystem.setIntakeBeltMotorSpeed(1);
+        //RobotContainer.intakeSubsystem.setIntakeBeltMotorSpeed(1);
         RobotContainer.intakeSubsystem.setIntakeServo(1);
 
     }

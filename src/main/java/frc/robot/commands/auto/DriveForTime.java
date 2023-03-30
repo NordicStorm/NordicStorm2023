@@ -12,6 +12,7 @@ public class DriveForTime extends CommandBase {
     DriveForTime(double xSpeed, long time){
         this.xSpeed = xSpeed;
         this.time = time;
+        addRequirements(RobotContainer.driveTrain);
     }
     
     @Override
