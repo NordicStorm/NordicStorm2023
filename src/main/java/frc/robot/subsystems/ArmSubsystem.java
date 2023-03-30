@@ -41,6 +41,7 @@ public class ArmSubsystem extends SubsystemBase {
        // ArmExtensionMotor.getPIDController().setOutputRange(-0.1, 0.1);
         // var extensionPIDController = ArmExtensionMotor.getPIDController();
        // ArmExtensionMotor.disableVoltageCompensation();
+       zeroExtensionEncoder();
 
     }
 
@@ -51,7 +52,6 @@ public class ArmSubsystem extends SubsystemBase {
         kIz = 0;
         kFF = 0.0;
         kSpeed = 0.4;
-
 
         ArmPitchMotor.setIdleMode(IdleMode.kBrake);
         ArmPitchMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);

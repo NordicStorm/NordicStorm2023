@@ -26,7 +26,7 @@ public class StraightAuto extends AutoWithInit {
 
         addCommands(new DropCube());
         addCommands(new DriveForTime(-1.5, 0, 0, 2800)); 
-        addCommands(new DriveForTime(0, 0, 1, 3140)); 
+        addCommands(new DriveForTime(0, 0, 1, 3800)); 
 
     }
 
