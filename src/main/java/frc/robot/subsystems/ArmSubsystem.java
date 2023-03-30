@@ -64,7 +64,10 @@ public class ArmSubsystem extends SubsystemBase {
         handPitchServo.setBounds(2.5, 0,0,0, 0.5);
         handPitchServo.setPeriodMultiplier(PeriodMultiplier.k1X);
         
-        
+        ArmExtensionMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
+        ArmExtensionMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
+        ArmPitchMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
+        ArmPitchMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 20);
         SmartDashboard.putNumber("kP", kP);
         SmartDashboard.putNumber("kI", kI);
         SmartDashboard.putNumber("kD", kD);

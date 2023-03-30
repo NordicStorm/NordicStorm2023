@@ -15,9 +15,9 @@ public class TRexArmsUpCommand extends CommandBase {
 
     @Override
     public void execute() {
-        double joystickshit = RobotContainer.leftJoystick.getY() * 2;
+        double joystickshit = RobotContainer.leftJoystick.getY() * 0.5;
         RobotContainer.intakeSubsystem.setTRexArmLeftSpeed(-joystickshit);
-        RobotContainer.intakeSubsystem.setTRexArmRightSpeed(joystickshit * 1.5);
+        RobotContainer.intakeSubsystem.setTRexArmRightSpeed(joystickshit);
     }
 
     @Override

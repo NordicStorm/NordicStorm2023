@@ -35,8 +35,11 @@ import java.util.function.BooleanSupplier;
 import com.kauailabs.navx.frc.AHRS;
 import com.playingwithfusion.TimeOfFlight;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -67,6 +70,11 @@ public class RobotContainer {
   public static final Joystick leftJoystick = new Joystick(1);
   public static final Joystick rightJoystick = new Joystick(0);
 
+  public static boolean isRed;
+  public static double AllianceAngleDeg;
+  
+  public static double AllianceAngleRad;
+
   public static DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   public static Pixy pixyController = new Pixy();
 
@@ -92,6 +100,10 @@ public class RobotContainer {
     //CommandScheduler.getInstance().setDefaultCommand(driveTrain, new OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
     vacuumSubsystem.setDefaultCommand(new VacuumDefaultCommand(vacuumSubsystem));
+    isRed = DriverStation.getAlliance() == Alliance.Red;
+    AllianceAngleDeg = isRed ? 180 : 0;
+    AllianceAngleRad = Units.degreesToRadians(AllianceAngleDeg);
+    SmartDashboard.putNumber("Alliance Angle", AllianceAngleDeg);
     configureBindings();
   }
 

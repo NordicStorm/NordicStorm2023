@@ -32,7 +32,7 @@ public class OperatorControl extends CommandBase {
         var rightStick = RobotContainer.rightJoystick;
         double forward = -rightStick.getY();
         double sideways = -rightStick.getX();
-        double rot = rightStick.getTwist();
+        double rot = -rightStick.getTwist();
         double throttle = rightStick.getThrottle();
         throttle=Util.map(throttle, 1, -1, 0.1, 1);
         if(forward<0.008 && rot>=0.14){//weird thing with joystick
@@ -52,7 +52,7 @@ public class OperatorControl extends CommandBase {
         rot=Util.signedSquare(rot);
         rot*=5;
         
-        ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), RobotContainer.driveTrain.getGyroRadians());
+        ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), RobotContainer.driveTrain.getGyroRadians() + RobotContainer.AllianceAngleRad);
     
         
         RobotContainer.driveTrain.limitDrive(localSpeeds, 0);

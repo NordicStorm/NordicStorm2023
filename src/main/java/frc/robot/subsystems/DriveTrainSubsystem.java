@@ -119,25 +119,25 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_LEFT_MODULE_STEER_MOTOR, Constants.FRONT_LEFT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-356.65740966796875));
+                Units.degreesToRadians(-356.65740966796875 + 180));
 
         frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_RIGHT_MODULE_STEER_MOTOR, Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-327.83203125 + 180));
+                Units.degreesToRadians(-327.83203125));
 
         backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_LEFT_MODULE_STEER_MOTOR, Constants.BACK_LEFT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-75.05035400390625));
+                Units.degreesToRadians(-75.05035400390625 + 180));
 
         backRightModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_RIGHT_MODULE_STEER_MOTOR, Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-292.57965087890625 + 180));
+                Units.degreesToRadians(-292.57965087890625));
         swerveModules.add(frontLeftModule);
         swerveModules.add(frontRightModule);
         swerveModules.add(backLeftModule);
@@ -177,7 +177,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
      * @return current angle in degrees
      */
     public double getGyroDegrees() {
-        return mininavx.getAngle();
+        return -mininavx.getAngle();
     }
 
     
@@ -215,7 +215,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
      * @param degrees
      */
     public void setAngleOffset(double degrees){
-        navx.setAngleAdjustment(-degrees);
+        mininavx.setAngleAdjustment(-degrees);
     }
 
   
@@ -261,6 +261,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
        SmartDashboard.putNumber("driveAng", getGyroDegrees());
         if (RobotContainer.rightJoystick.getRawButton(12)) {
             resetAngle();
+            setAngleOffset(RobotContainer.AllianceAngleDeg);
         }
         if (RobotContainer.rightJoystick.getRawButton(8)) {
             setPose(0, 0, 0);
