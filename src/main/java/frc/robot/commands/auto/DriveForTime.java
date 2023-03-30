@@ -7,10 +7,14 @@ public class DriveForTime extends CommandBase {
 
 
     double xSpeed;
+    double ySpeed;
+    double rotSpeed;
     long time;
     long timeToStop;
-    DriveForTime(double xSpeed, long time){
+    DriveForTime(double xSpeed, double ySpeed, double rotSpeed, long time){
         this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+        this.rotSpeed = rotSpeed;
         this.time = time;
         addRequirements(RobotContainer.driveTrain);
     }
@@ -22,7 +26,7 @@ public class DriveForTime extends CommandBase {
 
     @Override
     public void execute() {
-        RobotContainer.driveTrain.drive(xSpeed, 0, 0);
+        RobotContainer.driveTrain.drive(xSpeed, ySpeed, rotSpeed);
     }
 
     @Override
