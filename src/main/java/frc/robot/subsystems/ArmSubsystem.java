@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.util.function.FloatSupplier;
@@ -33,7 +34,7 @@ public class ArmSubsystem extends SubsystemBase {
     public final static double inPos = 5;
     public final static double outPos = 52;
     public static double count = 0;
-    public static double kP, kI, kD, kIz, kFF, kSpeed, mAcc, mVel;
+    public static double kP, kI, kD, kIz, kFF, kSpeed;
 
 
     public ArmSubsystem() {
@@ -44,16 +45,17 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public static void InitalizeArmSubsystem(){
-        kP = 0.5; 
-        kI = 0.5;
+        kP = 0.05; 
+        kI = 0.0;
         kD = 0; 
         kIz = 0;
-        kFF = 0.1;
-        kSpeed = 0.1;
-        mAcc = 10;
-        mVel = 10;
+        kFF = 0.0;
+        kSpeed = 0.4;
+
 
         ArmPitchMotor.setIdleMode(IdleMode.kBrake);
+        ArmPitchMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 10);
+        
         ArmExtensionMotor.setIdleMode(IdleMode.kBrake);
 
         handRollServo.setBounds(2.5, 0,0,0, 0.5);
@@ -84,8 +86,6 @@ public class ArmSubsystem extends SubsystemBase {
         m_pidController.setFF(kFF, 0);
         m_pidController.setOutputRange(-kSpeed, kSpeed, 0);
         // //m_pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
-        m_pidController.setSmartMotionMaxAccel(mAcc, 0);
-        m_pidController.setSmartMotionMaxVelocity(200, 0);
         // m_pidController.setSmartMotionAllowedClosedLoopError(2, 0);
         // ArmExtensionMotor.burnFlash();
 
@@ -105,6 +105,11 @@ public class ArmSubsystem extends SubsystemBase {
 
         
     }
+
+    public void zeroExtensionEncoder(){
+        ArmExtensionMotor.getEncoder().setPosition(0);
+    }
+
     @Override
     public void periodic(){
         SmartDashboard.putNumber("Arm Pitch Abd", ArmPitchMotor.getAbsoluteEncoder(Type.kDutyCycle).getPosition());

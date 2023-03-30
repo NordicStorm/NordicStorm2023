@@ -35,7 +35,7 @@ public class ArmOperatorControl extends CommandBase {
         throttle = 0;
 
         targetPos += throttle * 0.003;
-        targetPos = Util.clamp(targetPos, 0.24, 0.5);
+        targetPos = Util.clamp(targetPos, 0.24, 0.6);
         SmartDashboard.putNumber("Target Pos", targetPos);
        RobotContainer.armSubsystem.MovePitch(targetPos);
         SmartDashboard.putNumber("Pitch Throttle", throttle);

@@ -96,7 +96,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     private Pose2d pose;
     private final AHRS navx = new AHRS(Port.kMXP);
-    private final AHRS mininavx = new AHRS(SerialPort.Port.kUSB2);
+    private final AHRS mininavx = new AHRS(SerialPort.Port.kUSB1);
 
     // this is basically the 'privilege level' the rotation control ability is at.
     // So 0 means it will take anything, 1 means 1 or higher.
