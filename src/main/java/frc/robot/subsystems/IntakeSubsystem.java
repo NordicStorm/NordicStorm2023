@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private static Servo IntakeActuatorServo = new Servo(Constants.IntakeActuator);
 
     public IntakeSubsystem() {
-
+        setIntakeServo(0); // initialize up
     }
 
 

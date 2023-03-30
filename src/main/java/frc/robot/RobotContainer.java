@@ -21,6 +21,7 @@ import frc.robot.commands.ArmCommands.ArmPitchCommand;
 import frc.robot.commands.TRexArms.TRexArmsUpCommand;
 import frc.robot.commands.VacuumCommands.VacuumDefaultCommand;
 import frc.robot.commands.VacuumCommands.VacuumManualControlCommand;
+import frc.robot.commands.auto.StraightAuto;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -199,8 +200,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    AutoWithInit auto = new ExamplePathAuto(driveTrain);
+    AutoWithInit auto = new StraightAuto();//new ExamplePathAuto(driveTrain);
     auto.initializeCommands();
+
     return auto;
   }
 }
