@@ -13,7 +13,7 @@ public class DropCube extends CommandBase {
     
     @Override
     public void initialize() {
-        timeToStop = System.currentTimeMillis()+1000;
+        timeToStop = System.currentTimeMillis()+4000;
     }
 
     @Override
