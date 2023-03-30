@@ -20,7 +20,6 @@ public class StraightAuto extends AutoWithInit {
     public void initializeCommands() {
         
 
-        boolean goOntoRamp = SmartDashboard.getBoolean("DriveOntoRamp", true);
         RobotContainer.driveTrain.resetAngle();
         RobotContainer.driveTrain.setAngleOffset(180 + RobotContainer.AllianceAngleDeg);
 
