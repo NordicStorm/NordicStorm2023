@@ -25,7 +25,7 @@ public class StraightAuto extends AutoWithInit {
         RobotContainer.driveTrain.setAngleOffset(180 + RobotContainer.AllianceAngleDeg);
 
         addCommands(new DropCube());
-        addCommands(new DriveForTime(-0.3, 3000)); 
+        addCommands(new DriveForTime(-1.5, 3000)); 
     }
 
 }

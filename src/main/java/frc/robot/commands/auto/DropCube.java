@@ -30,7 +30,7 @@ public class DropCube extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-
+        RobotContainer.intakeSubsystem.setIntakeBeltMotorSpeed(0);
     }
 
 }
